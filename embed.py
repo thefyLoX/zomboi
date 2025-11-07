@@ -13,6 +13,11 @@ def chat_message(timestamp: datetime, message: str) -> Embed:
     return __embedify(timestamp, Colour.og_blurple(), message)
 
 
+def server_message(timestamp: datetime, message: str) -> Embed:
+    """Orange embed to relay a server message"""
+    return __embedify(timestamp, Colour.orange, message)
+
+
 def perk(timestamp: datetime, user: str, aka: str, perk: str, level: int) -> Embed:
     """Blue embed to indicate a user's level-up"""
     message = f":chart_with_upwards_trend: {user} {aka}reached {perk} level {level}"

@@ -55,8 +55,10 @@ class ChatHandler(commands.Cog):
         if  match and self.bot.channel is not None:
             pattern = r"(?:] Message.*chat=General, author=\'|^ )(.*)(?:\', text=| alert message: )\'(.*)\'"
             match_data = re.search(pattern, message)
-            # Exit if server message handling setting is disabled
-            if match_data.group(1) == "Server" and not self.serverMessages:
+
+            isServer = match_data.group(1) == "Server"
+            # Exit if it is a server announcement but server message handling setting is disabled
+            if isServer and not self.serverMessages:
                 return
 
             if match and self.bot.channel is not None:
@@ -69,13 +71,24 @@ class ChatHandler(commands.Cog):
                 if self.webhook is None:
                     self.webhook = await self.bot.channel.create_webhook(name="zomboi")
 
-                name = match_data.group(1)
+                if isServer:
+                    name = "PZ Discord integration"
+                else:
+                    name = match_data.group(1)
                 avatar_url = None
+
                 for member in self.bot.get_all_members():
                     if match_data.group(1) in member.name:
                         avatar_url = member.display_avatar
-                await self.webhook.send(
-                    embed=embed.chat_message(timestamp, match_data.group(2)),
-                    username=name,
-                    avatar_url=avatar_url,
-                )
+                if match_data.group(1) == "Server":
+                    await self.webhook.send(
+                        embed=embed.server_message(timestamp, match_data.group(2)),
+                        username=name,
+                        avatar_url=avatar_url,
+                    )
+                else:
+                    await self.webhook.send(
+                        embed=embed.chat_message(timestamp, match_data.group(2)),
+                        username=name,
+                        avatar_url=avatar_url,
+                    )
