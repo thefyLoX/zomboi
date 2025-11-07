@@ -72,7 +72,7 @@ async def on_ready():
     else:
         zomboi.log.info("channel connected")
     await zomboi.add_cog(UserHandler(zomboi, logPath))
-    await zomboi.add_cog(ChatHandler(zomboi, logPath))
+    await zomboi.add_cog(ChatHandler(zomboi, logPath, serverMessages))
     await zomboi.add_cog(PerkHandler(zomboi, logPath))
     await zomboi.add_cog(RCONAdapter(zomboi))
     await zomboi.add_cog(MapHandler(zomboi))
