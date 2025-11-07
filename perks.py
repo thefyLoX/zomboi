@@ -22,6 +22,7 @@ class PerkHandler(commands.Cog):
         self.notifyDeath = os.getenv("DEATHS", "True") == "True"
         self.notifyPerk = os.getenv("PERKS", "True") == "True"
         self.notifyCreateChar = os.getenv("CREATECHAR", "True") == "True"
+        self.notifyBlacklist = os.getenv("BLACKLIST", "").split(',')
 
     def splitLine(self, line: str) -> tuple[datetime, str]:
         """Split a log line into a timestamp and the remaining message"""
@@ -108,7 +109,7 @@ class PerkHandler(commands.Cog):
             user.died.append(timestamp)
             if timestamp > self.lastUpdateTimestamp:
                 self.bot.log.info(f"{user.name} died")
-                if self.notifyDeath:
+                if self.notifyDeath and user.name not in self.notifyBlacklist:
                     return embed.death(
                         timestamp, user.name, log_char_string, user.hoursAlive
                     )
@@ -117,7 +118,7 @@ class PerkHandler(commands.Cog):
             if timestamp > self.lastUpdateTimestamp:
                 user.online = True
                 self.bot.log.info(f"{user.name} login")
-                if self.notifyJoin and user.name != "admin":
+                if self.notifyJoin and user.name not in self.notifyBlacklist:
                     return embed.resume(
                         timestamp, user.name, log_char_string, user.hoursAlive
                     )
@@ -126,7 +127,7 @@ class PerkHandler(commands.Cog):
             if timestamp > self.lastUpdateTimestamp:
                 user.online = True
                 self.bot.log.info(f"{user.name} new character")
-                if self.notifyCreateChar:
+                if self.notifyCreateChar and user.name not in self.notifyBlacklist:
                     return embed.join(timestamp, user.name, log_char_string)
 
         elif type == "Level Changed":
@@ -136,7 +137,7 @@ class PerkHandler(commands.Cog):
             user.perks[perk] = level
             if timestamp > self.lastUpdateTimestamp:
                 self.bot.log.info(f"{user.name} {perk} changed to {level}")
-                if self.notifyPerk:
+                if self.notifyPerk and user.name not in self.notifyBlacklist:
                     return embed.perk(
                         timestamp, user.name, log_char_string, perk, level
                     )
