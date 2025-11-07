@@ -52,6 +52,9 @@ handler.setLevel(logging.DEBUG)
 zomboi.log.addHandler(handler)
 zomboi.log.setLevel(logging.DEBUG)
 
+# additional env vars
+
+serverMessages = os.getenv("SERVERMESSAGES", "True") == "True"
 
 @zomboi.event
 async def on_ready():

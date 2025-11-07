@@ -8,9 +8,10 @@ import re
 class ChatHandler(commands.Cog):
     """Class which handles the chat log files"""
 
-    def __init__(self, bot, logPath):
+    def __init__(self, bot, logPath, serverMessages):
         self.bot = bot
         self.logPath = logPath
+        self.serverMessages = serverMessages
         self.lastUpdateTimestamp = datetime.now()
         self.update.start()
         self.webhook = None
@@ -46,34 +47,14 @@ class ChatHandler(commands.Cog):
         """Parse the given line from the logfile and mirror chat message in
         discord if necessary"""
 
-        # # Ignore anything that's not "General" chat
-        # if "chat=General" not in message:
-        #     return
-
-        # # Mirror any other received messages in the discord chat
-        # pattern = r"] Message.*author=\'(.*)\', text=\'(.*)\'"
-        # match = re.search(pattern, message)
-        # if match and self.bot.channel is not None:
-        #     # Use a webhook to make it look like we're the discord member
-        #     # God bless stack overflow
-        #     if self.bot.channel:
-        #         for webhook in await self.bot.channel.webhooks():
-        #             if webhook.user == self.bot.user:
-        #                 self.webhook = webhook
-        #     if self.webhook is None:
-        #         self.webhook = await self.bot.channel.create_webhook(name="zomboi")
-        #     name = match.group(1)
-        #     avatar_url = None
-        #     for member in self.bot.get_all_members():
-        #         if match.group(1) in member.name:
-        #             avatar_url = member.avatar_url
-        #     await self.webhook.send(
-        #         match.group(2), username=name, avatar_url=avatar_url
-        #     )
+        # # Ignore anything that's not "General" chat or a server announcement
         match = re.search(r"^(?:\[info\] Message ChatMessage\{chat=General, author=| Server alert message: )\'", message)
         if  match and self.bot.channel is not None:
             pattern = r"(?:] Message.*chat=General, author=\'|^ )(.*)(?:\', text=| alert message: )\'(.*)\'"
             match_data = re.search(pattern, message)
+            # Exit if server message handling setting is disabled
+            if match_data.group(1) == "Server" and not self.serverMessages:
+                return
             # Use a webhook to make it look like we're the discord member
             # God bless stack overflow
             if self.bot.channel:
