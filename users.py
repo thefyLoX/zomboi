@@ -142,7 +142,7 @@ class UserHandler(commands.Cog):
                 user.lastLocation = (matches.group(2), matches.group(3))
             if timestamp > self.lastUpdateTimestamp:
                 self.bot.log.info(f"{user.name} disconnected")
-                if self.notifyDisconnect:
+                if self.notifyDisconnect and user.name != "admin":
                     return embed.leave(timestamp, user.name)
 
         elif "fully connected" in message:

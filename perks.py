@@ -89,8 +89,18 @@ class PerkHandler(commands.Cog):
         type, message = message.split("]", 1)
 
         # All these logs should include hours survived
-        hours = re.search(r"Hours Survived: (\d+)", message).group(1)
-        user.hoursAlive = hours
+        # hours = re.search(r"Hours Survived: (\d+)", message).group(1)
+        # user.hoursAlive = hours
+		
+        # All these logs should include hours survived
+        # hours = re.search(r"Hours Survived: (\d+)", message).group(1)
+
+        hours = 0
+        survived = re.search(r"Hours Survived: (\d+)", message)
+        if survived:
+            hours = survived.group(1)
+
+        user.hoursAlive = int(hours)
         if int(hours) > int(user.recordHoursAlive):
             user.recordHoursAlive = hours
 
@@ -107,7 +117,7 @@ class PerkHandler(commands.Cog):
             if timestamp > self.lastUpdateTimestamp:
                 user.online = True
                 self.bot.log.info(f"{user.name} login")
-                if self.notifyJoin:
+                if self.notifyJoin and user.name != "admin":
                     return embed.resume(
                         timestamp, user.name, log_char_string, user.hoursAlive
                     )

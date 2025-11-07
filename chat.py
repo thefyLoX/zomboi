@@ -49,17 +49,28 @@ class ChatHandler(commands.Cog):
         """Parse the given line from the logfile and mirror chat message in
         discord if necessary"""
 
+        # Example message received
+        # [info] Message ChatMessage{chat=General, author='fyLoX', text='testingtesting'} sent to chat (id = 0) members.
         # Ignore anything that's not "General" chat
         if "chat=General" not in message:
+        # PATCH 1line #
+        # if "chat=General" or "Server alert message: '" not in message:
             return
 
         # Mirror any other received messages in the discord chat
         pattern = r"] Message.*author=\'(.*)\', text=\'(.*)\'"
         match = re.search(pattern, message)
 
+        # PATCH 2 lines#
+        # match_patch = re.search(r"^(?:\[info\] Message ChatMessage\{chat=General, author=|\] Server alert message: )\'", message)
+        # if match_patch and self.bot.channel is not None:
+
         if match and self.bot.channel is not None:
             # Use a webhook to make it look like we're the discord member
             # God bless stack overflow
+            # PATCH 2 lines #
+            # pattern = r"(?:] Message.*chat=General, author=\'|^ )(.*)(?:\', text=| alert message: )\'(.*)\'"
+            # match = re.search(pattern, message)
             if self.bot.channel:
                 for webhook in await self.bot.channel.webhooks():
                     if webhook.user == self.bot.user:
