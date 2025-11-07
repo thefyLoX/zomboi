@@ -58,6 +58,7 @@ class ChatHandler(commands.Cog):
 
             isServer = match_data.group(1) == "Server"
             # Exit if it is a server announcement but server message handling setting is disabled
+            # [07-11-25 21:59:34.725] Server alert message: 'dasdasd' sent..
             if isServer and not self.serverMessages:
                 return
 
@@ -76,20 +77,21 @@ class ChatHandler(commands.Cog):
                 else:
                     name = match_data.group(1)
                 avatar_url = None
+                message = match_data.group(2)
 
                 for member in self.bot.get_all_members():
                     if match_data.group(1) in member.display_name:
-                        avatar_url = member.avatar_url
-                if match_data.group(1) == "Server":
+                        avatar_url = member.display_avatar
+                if isServer:
                     await self.webhook.send(
-                        embed=embed.server_message(timestamp, match_data.group(2)),
+                        embed=embed.server_message(message),
                         username="Server announcement",
                         avatar_url=avatar_url,
                         suppress_embeds=True,
                     )
                 else:
                     await self.webhook.send(
-                        embed=embed.chat_message(timestamp, match_data.group(2)),
+                        embed=embed.chat_message(timestamp, message),
                         username=name,
                         avatar_url=avatar_url,
                         suppress_embeds=True,

@@ -13,9 +13,9 @@ def chat_message(timestamp: datetime, message: str) -> Embed:
     return __embedify(timestamp, Colour.og_blurple(), message)
 
 
-def server_message(timestamp: datetime, message: str) -> Embed:
+def server_message(message: str) -> Embed:
     """Orange embed to relay a server message"""
-    return __embedify(timestamp, Colour.orange(), message)
+    return Embed(colour=Colour.orange(), description=message)
 
 
 def perk(timestamp: datetime, user: str, aka: str, perk: str, level: int) -> Embed:
