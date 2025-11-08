@@ -83,16 +83,16 @@ class ChatHandler(commands.Cog):
                         avatar_url = member.display_avatar
                 if isServer:
                     await self.webhook.send(
-                        # embed=embed.server_message(message),
-                        match_data.group(2),
+                        # content=match_data.group(2),
+                        embed=embed.server_message(match_data.group(2)),
                         username="Server announcement",
                         avatar_url=avatar_url,
-                        suppress_embeds=True,
+                        suppress_embeds=False,
                     )
                 else:
                     await self.webhook.send(
-                        embed=embed.chat_message(timestamp, match_data.group(2)),
+                        embed=embed.chat_message(None, match_data.group(2)),
                         username=name,
                         avatar_url=avatar_url,
-                        suppress_embeds=True,
+                        suppress_embeds=False,
                     )
