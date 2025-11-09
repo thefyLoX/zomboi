@@ -73,19 +73,19 @@ class ChatHandler(commands.Cog):
                     self.webhook = await self.bot.channel.create_webhook(name="zomboi")
 
                 if isServer:
-                    name = "PZ Discord integration"
+                    name = "Spiffo"
                 else:
                     name = match_data.group(1)
                 avatar_url = None
 
                 for member in self.bot.get_all_members():
-                    if match_data.group(1) in member.display_name:
+                    if match_data.group(1) in member.display_name or match_data.group(1) in member.user:
                         avatar_url = member.display_avatar
                 if isServer:
                     await self.webhook.send(
                         # content=match_data.group(2),
                         embed=embed.server_message(match_data.group(2)),
-                        username="Server announcement",
+                        username=name,
                         avatar_url=avatar_url,
                         suppress_embeds=False,
                     )
