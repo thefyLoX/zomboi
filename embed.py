@@ -15,6 +15,7 @@ def chat_message(timestamp: datetime, message: str) -> Embed:
 
 def server_message(message: str) -> Embed:
     """Orange embed to relay a server message"""
+    message = f":warning: {message}"
     return Embed(colour=Colour.orange(), description=message)
 
 

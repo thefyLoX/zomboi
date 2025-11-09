@@ -73,23 +73,19 @@ class ChatHandler(commands.Cog):
                     self.webhook = await self.bot.channel.create_webhook(name="zomboi")
 
                 if isServer:
-                    name = "Spiffo"
-                else:
-                    name = match_data.group(1)
-                avatar_url = None
-
-                for member in self.bot.get_all_members():
-                    if match_data.group(1) in member.display_name or match_data.group(1) in member.user:
-                        avatar_url = member.display_avatar
-                if isServer:
                     await self.webhook.send(
-                        # content=match_data.group(2),
                         embed=embed.server_message(match_data.group(2)),
-                        username=name,
-                        avatar_url=avatar_url,
+                        username="Server announcement",
+                        avatar_url='https://cdn.discordapp.com/avatars/1010162166646714438/c4abad8a4dde4754689ea2418ff6aab8',
                         suppress_embeds=False,
                     )
                 else:
+                    name = match_data.group(1)
+                    avatar_url = None
+                    for member in self.bot.get_all_members():
+                        if (name in member.display_name) or (name in member.name):
+                            avatar_url = member.display_avatar
+
                     await self.webhook.send(
                         embed=embed.chat_message(None, match_data.group(2)),
                         username=name,
