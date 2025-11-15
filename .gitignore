@@ -161,3 +161,4 @@ cython_debug/
 *.log
 .vscode
 map.png
+error.debug
