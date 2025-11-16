@@ -26,6 +26,7 @@ colours = {
     "Medical": (229, 128, 151),
     "RestaurantsAndEntertainment": (245, 225, 60),
     "RetailAndCommercial": (184, 205, 84),
+    "gravel": (185, 122, 87),
 }
 
 pathsToTry = [
